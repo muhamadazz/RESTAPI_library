@@ -3,9 +3,6 @@
 var response = require('./res');
 var connection = require('./config/connection');
 
-exports.index = function(req,res){
-    response.ok("running my Rest API", res)
-};
 
 //1. Get a list of all books
 exports.allbooks = function(req,res) {
@@ -59,11 +56,11 @@ exports.booksByCategory = function(req, res){
 
 // 5. Add a new book
 exports.addBook = function(req, res){
-    var title = req.body.title;
-    var author = req.body.author;
-    var category = req.body.category;
-    var publishedYear = req.body.published_year;
-    var availableStatus = req.body.available_status;
+    let title = req.body.title;
+    let author = req.body.author;
+    let category = req.body.category;
+    let publishedYear = req.body.published_year;
+    let availableStatus = req.body.available_status;
 
     connection.query('INSERT INTO book (title, author, category, published_year, available_status) VALUES(?,?,?,?,?)', [title, author, category, publishedYear, availableStatus],
         function(error, rows, fields){
@@ -77,12 +74,12 @@ exports.addBook = function(req, res){
 
 // 6. Update details of a book
 exports.updateBook = function(req, res){
-    var id = req.body.book_id;
-    var title = req.body.title;
-    var author = req.body.author;
-    var category = req.body.category;
-    var publishedYear = req.body.published_year;
-    var availableStatus = req.body.available_status;
+    let id = req.body.book_id;
+    let title = req.body.title;
+    let author = req.body.author;
+    let category = req.body.category;
+    let publishedYear = req.body.published_year;
+    let availableStatus = req.body.available_status;
 
     connection.query('UPDATE book SET title=?, author=?, category=?, published_year=?, available_status=? WHERE book_id=?', [title,author,category,publishedYear,availableStatus,id],
         function(error, rows, fields){
@@ -148,8 +145,12 @@ exports.showMemberById = function(req, res){
 
 // 11. Add a new member
 exports.addMember = function(req, res){
-    let member = req.body;
-    connection.query('INSERT INTO member SET ?', member,
+    let id = req.body.id;
+    let name = req.body.name;
+    let phone = req.body.phone_number;
+    let address = req.body.address;
+
+    connection.query('INSERT INTO member (id, name, phone_number, address) VALUES(?,?,?,?)', [id, name, phone, address],
         function(error, rows, fields){
             if(error){
                 console.log(error);
@@ -161,9 +162,12 @@ exports.addMember = function(req, res){
 
 // 12. Update details of a member
 exports.updateMember = function(req, res){
-    let memberId = req.params.memberId;
-    let updatedMember = req.body;
-    connection.query('UPDATE member SET ? WHERE id = ?', [updatedMember, memberId],
+    let id = req.body.id;
+    let name = req.body.name;
+    let phone = req.body.phone_number;
+    let address = req.body.address;
+
+    connection.query('UPDATE member SET name=?, phone_number=?, address=? WHERE id = ?', [name,phone,address,id],
         function(error, rows, fields){
             if(error){
                 console.log(error);
@@ -200,6 +204,7 @@ exports.allLoans = function(req, res) {
             response.ok(rows, res);
         }
     });
+
 };
 
 // 15. Get a list of loans by memberId
@@ -230,12 +235,20 @@ exports.loansByCategory = function(req, res){
 
 // 17. Add a new loan
 exports.addLoan = function(req, res){
-    let loan = req.body;
-    connection.query('INSERT INTO loan SET ?', loan,
+    let borrower = req.body.borrower;
+    let memberId = req.body.memberId; 
+    let book = req.body.book;
+    let bookId = req.body.bookId;
+    let category = req.body.category;
+    let loanDate = req.body.loan_date;
+    let dueDate = req.body.due_date;
+
+    connection.query('INSERT INTO loan (borrower, memberId, book, bookId, category, loan_date, due_date ) VALUES(?,?,?,?,?,?,?)', [borrower, memberId, book, bookId, category,loanDate,dueDate],
         function(error, rows, fields){
             if(error){
                 console.log(error);
             } else {
+                connection.query('UPDATE book SET available_status =0  WHERE book_id = ?',[bookId]);
                 response.ok("Loan added successfully.", res);
             }
         });
@@ -256,9 +269,16 @@ exports.showLoanByBookId = function(req, res){
 
 // 19. Updates borrowing information based by book id
 exports.updateLoanByBookId = function(req, res){
-    let bookId = req.params.bookId;
-    let updatedLoan = req.body;
-    connection.query('UPDATE loan SET ? WHERE bookId = ?', [updatedLoan, bookId],
+    let loanId = req.body.loan_id;
+    let borrower = req.body.borrower;
+    let memberId = req.body.memberId; 
+    let book = req.body.book;
+    let bookId = req.body.bookId;
+    let category = req.body.category;
+    let loanDate = req.body.loan_date;
+    let dueDate = req.body.due_date;
+
+    connection.query('UPDATE loan SET borrower=?,memberId=?,book=?,bookId=?,category=?,loan_date=?,due_date=? WHERE loan_id = ?', [borrower, memberId,book,bookId,category,loanDate,dueDate,loanId],
         function(error, rows, fields){
             if(error){
                 console.log(error);
