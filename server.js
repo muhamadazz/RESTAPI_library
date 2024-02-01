@@ -8,8 +8,13 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 // call routes
-var routes = require('./routes');
-routes(app);
+const  bookRoute = require('./routes/bookRoute');
+const  memberRoute = require('./routes/memberRoute')
+const  loanRoute = require('./routes/loanRoute')
+
+bookRoute(app);
+memberRoute(app);
+loanRoute(app);
 
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);

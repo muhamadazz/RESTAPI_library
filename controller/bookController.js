@@ -1,7 +1,7 @@
 'use strict';
 
-var response = require('./res');
-var connection = require('./config/connection');
+var response = require('../res');
+var connection = require('../config/connection');
 
 
 //1. Get a list of all books
