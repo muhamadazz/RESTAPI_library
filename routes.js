@@ -19,6 +19,12 @@ module.exports = function(app) {
 
     app.route('/book/available/:availableStatus')
         .get(myjson.booksByAvailability); // Get a list of books by available_status
+    app.route('/book/add')
+        .post(myjson.addBook); //add a new book
+    app.route('/book/update')
+        .put(myjson.updateBook); //Update details of a book
+    app.route('/book/delete/:id')
+        .delete(myjson.deleteBook);//delete a book
 
     // ... (previous code)
 

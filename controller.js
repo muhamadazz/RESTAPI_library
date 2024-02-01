@@ -59,8 +59,13 @@ exports.booksByCategory = function(req, res){
 
 // 5. Add a new book
 exports.addBook = function(req, res){
-    let book = req.body;
-    connection.query('INSERT INTO book SET ?', book,
+    var title = req.body.title;
+    var author = req.body.author;
+    var category = req.body.category;
+    var publishedYear = req.body.published_year;
+    var availableStatus = req.body.available_status;
+
+    connection.query('INSERT INTO book (title, author, category, published_year, available_status) VALUES(?,?,?,?,?)', [title, author, category, publishedYear, availableStatus],
         function(error, rows, fields){
             if(error){
                 console.log(error);
@@ -72,9 +77,14 @@ exports.addBook = function(req, res){
 
 // 6. Update details of a book
 exports.updateBook = function(req, res){
-    let id = req.params.id;
-    let updatedBook = req.body;
-    connection.query('UPDATE book SET ? WHERE book_id = ?', [updatedBook, id],
+    var id = req.body.book_id;
+    var title = req.body.title;
+    var author = req.body.author;
+    var category = req.body.category;
+    var publishedYear = req.body.published_year;
+    var availableStatus = req.body.available_status;
+
+    connection.query('UPDATE book SET title=?, author=?, category=?, published_year=?, available_status=? WHERE book_id=?', [title,author,category,publishedYear,availableStatus,id],
         function(error, rows, fields){
             if(error){
                 console.log(error);
