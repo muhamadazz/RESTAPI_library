@@ -105,6 +105,7 @@ exports.deleteLoanByBookId = function(req, res){
             if(error){
                 console.log(error);
             } else {
+                connection.query('UPDATE book SET available_status =1  WHERE book_id = ?',[bookId]);
                 response.ok("Loan deleted successfully.", res);
             }
         });
